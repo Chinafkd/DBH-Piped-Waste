@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_UnloadPipedComposter.label>卸载管道堆肥桶</DBHPW_UnloadPipedComposter.label>
+  <DBHPW_UnloadPipedComposter.verb>卸载</DBHPW_UnloadPipedComposter.verb>
+  <DBHPW_UnloadPipedComposter.gerund>正在卸载</DBHPW_UnloadPipedComposter.gerund>
+  <DBHPW_ExtractSewage.label>抽取污水</DBHPW_ExtractSewage.label>
+  <DBHPW_ExtractSewage.verb>抽取</DBHPW_ExtractSewage.verb>
+  <DBHPW_ExtractSewage.gerund>正在抽取</DBHPW_ExtractSewage.gerund>
+  <DBHPW_RefinePipedSewage.label>精炼管道污水</DBHPW_RefinePipedSewage.label>
+  <DBHPW_RefinePipedSewage.verb>精炼</DBHPW_RefinePipedSewage.verb>
+  <DBHPW_RefinePipedSewage.gerund>正在精炼</DBHPW_RefinePipedSewage.gerund>
+</LanguageData>

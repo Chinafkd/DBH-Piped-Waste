@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_UnloadPipedComposter.reportString>正在从 TargetA 卸载生物固体。</DBHPW_UnloadPipedComposter.reportString>
+  <DBHPW_ExtractSewage.reportString>正在从 TargetA 抽取粪便污泥。</DBHPW_ExtractSewage.reportString>
+  <DBHPW_RefinePipedSewage.reportString>正在从 TargetA 精炼管道污水。</DBHPW_RefinePipedSewage.reportString>
+</LanguageData>

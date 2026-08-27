@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_SettingsCategory>DBH 管道废物</DBHPW_SettingsCategory>
+  <DBHPW_SettingRequirePower>污水吸入泵需要电力</DBHPW_SettingRequirePower>
+  <DBHPW_SettingRequirePowerDesc>开启时，生产建筑的污水吸入泵额外消耗 50W。关闭后，管道堆肥器无需电力，管道生物燃料精炼机仅保留机器本体的 170W 功耗。修改立即生效。</DBHPW_SettingRequirePowerDesc>
+  <DBHPW_TransferMode>转移污水</DBHPW_TransferMode>
+  <DBHPW_TransferModeDesc>停止吸入，并每 10 tick 尝试向同一管网中的其他 DBHPW 组件转移 1 单位污水。</DBHPW_TransferModeDesc>
+  <DBHPW_BufferInspect>污水缓冲：{0} / {1}</DBHPW_BufferInspect>
+  <DBHPW_TransferActive>正在转移污水</DBHPW_TransferActive>
+  <DBHPW_ReservedInspect>当前配方已预留：{0}</DBHPW_ReservedInspect>
+  <DBHPW_RefineryFallbackInspect>专用管道污水配方不可用，该精炼机无法接收污水。</DBHPW_RefineryFallbackInspect>
+  <DBHPW_InsufficientSewage>污水不足</DBHPW_InsufficientSewage>
+  <DBHPW_RefineryDisabled>专用管道污水精炼功能不可用。</DBHPW_RefineryDisabled>
+  <DBHPW_ExtractNow>紧急抽空</DBHPW_ExtractNow>
+  <DBHPW_ExtractNowDesc>开启后请求一名殖民者持续在此工作，每 120 ticks 抽取一批，直到存粪坑被清空；关闭后取消请求。每个完整批次为 75 污水。</DBHPW_ExtractNowDesc>
+  <DBHPW_AutoExtract>自动抽取</DBHPW_AutoExtract>
+  <DBHPW_AutoExtractDesc>达到目标量上方 250 单位时开始抽取，并在下一批会低于目标量前停止。</DBHPW_AutoExtractDesc>
+  <DBHPW_TargetLevel>目标储量</DBHPW_TargetLevel>
+  <DBHPW_TargetLevelDesc>设置自动抽取希望在存粪坑中保留的污水量。</DBHPW_TargetLevelDesc>
+  <DBHPW_TargetSlider>自动抽取目标：{0}%</DBHPW_TargetSlider>
+  <DBHPW_TargetInspect>自动抽取目标：{0}</DBHPW_TargetInspect>
+  <DBHPW_ManualPending>已请求紧急抽空</DBHPW_ManualPending>
+  <DBHPW_AutoActive>正在自动抽取</DBHPW_AutoActive>
+  <DBHPW_LinesHeader>发酵线路：</DBHPW_LinesHeader>
+  <DBHPW_LineEmpty>—</DBHPW_LineEmpty>
+  <DBHPW_LineReady>可卸载</DBHPW_LineReady>
+  <DBHPW_LineInspect>  {0}：{1}</DBHPW_LineInspect>
+  <DBHPW_IdealTemperature>理想温度：{0} ~ {1}</DBHPW_IdealTemperature>
+  <DBHPW_DebugInjectSewage>调试：注入污水</DBHPW_DebugInjectSewage>
+  <DBHPW_DebugInjectSewageDesc>仅开发者模式显示。使用 DBH 原生优先级和阻塞规则，向该建筑所在的污水管网投入指定数量的污水。</DBHPW_DebugInjectSewageDesc>
+  <DBHPW_DebugInjectAmount>要注入的污水：{0}</DBHPW_DebugInjectAmount>
+  <DBHPW_DebugInjectSuccess>已向管网投入 {0} 污水。</DBHPW_DebugInjectSuccess>
+  <DBHPW_DebugInjectNoNetwork>该建筑尚未连接到 DBH 污水管网。</DBHPW_DebugInjectNoNetwork>
+  <DBHPW_DebugInjectNoReceiver>无法投入 {0} 污水：管网中没有未阻塞的接收端。</DBHPW_DebugInjectNoReceiver>
+  <DBHPW_DumpPitDebug>调试：导出存粪坑状态</DBHPW_DumpPitDebug>
+  <DBHPW_DumpPitDebugDesc>开发者模式：将当前存粪坑、管网成员、网络身份和所有污水接收端状态写入 Player.log。</DBHPW_DumpPitDebugDesc>
+</LanguageData>

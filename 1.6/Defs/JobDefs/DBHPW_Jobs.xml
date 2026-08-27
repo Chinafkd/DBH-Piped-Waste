@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef><defName>DBHPW_UnloadPipedComposter</defName><driverClass>DBHPipedWaste.JobDriver_UnloadPipedComposter</driverClass><reportString>unloading biosolids from TargetA</reportString></JobDef>
+  <JobDef><defName>DBHPW_ExtractSewage</defName><driverClass>DBHPipedWaste.JobDriver_ExtractSewage</driverClass><reportString>extracting fecal sludge from TargetA</reportString></JobDef>
+  <JobDef><defName>DBHPW_RefinePipedSewage</defName><driverClass>DBHPipedWaste.JobDriver_RefinePipedSewage</driverClass><reportString>refining piped sewage at TargetA</reportString></JobDef>
+</Defs>

@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BasedHygieneMom">
+    <defName>DBHPW_PipedComposter</defName>
+    <label>piped composter</label>
+    <description>Accepts sewage directly from a DBH sewage pipe and ferments it in five independent batches into biosolids.</description>
+    <thingClass>DBHPipedWaste.Building_PipedComposter</thingClass>
+    <graphicData>
+      <texPath>DBH/Things/Building/Sewage/Composter</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+      <damageData>
+        <rect>(0.05,0.1,0.9,0.9)</rect>
+      </damageData>
+    </graphicData>
+    <size>(1,1)</size>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.45</fillPercent>
+    <pathCost>60</pathCost>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <costList>
+      <Steel>65</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <Mass>10</Mass>
+      <MaxHitPoints>120</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <comps>
+      <li Class="DubsBadHygiene.CompProperties_Pipe">
+        <mode>Sewage</mode>
+      </li>
+      <li Class="DBHPipedWaste.CompProperties_PipedSewageHandler">
+        <compClass>DBHPipedWaste.CompPipedComposterSewage</compClass>
+        <capacity>250</capacity>
+        <priority>100</priority>
+        <pumpPowerConsumption>50</pumpPowerConsumption>
+        <baseMachinePowerConsumption>0</baseMachinePowerConsumption>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>0</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+      <li Class="CompProperties_Forbiddable" />
+      <li Class="CompProperties_TemperatureRuinable">
+        <minSafeTemperature>-20</minSafeTemperature>
+        <maxSafeTemperature>60</maxSafeTemperature>
+        <progressPerDegreePerTick>0.00001</progressPerDegreePerTick>
+      </li>
+    </comps>
+    <constructEffect>ConstructMetal</constructEffect>
+    <designationCategory>Hygiene</designationCategory>
+    <researchPrerequisites>
+      <li>Plumbing</li>
+      <li>SewageSludgeComposting</li>
+    </researchPrerequisites>
+  </ThingDef>
+  <ThingDef ParentName="BenchBase">
+    <defName>DBHPW_PipedBiofuelRefinery</defName>
+    <label>piped biofuel refinery</label>
+    <description>A dedicated biofuel refinery with a sewage intake. Its only bill consumes 75 buffered sewage and produces 35 chemfuel without hauled fecal sludge.</description>
+    <thingClass>Building_WorkTable</thingClass>
+    <minifiedDef />
+    <graphicData>
+      <texPath>Things/Building/Production/Refinery</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <drawSize>(3,2)</drawSize>
+      <shadowData>
+        <volume>(2.22,0.8,0.62)</volume>
+        <offset>(0,0,-0.13)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.3,0.1,2.4,1.8)</rect>
+      </damageData>
+    </graphicData>
+    <thingCategories Inherit="false" />
+    <size>(3,2)</size>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <fillPercent>0.5</fillPercent>
+    <tickerType>Normal</tickerType>
+    <costList>
+      <Steel>170</Steel>
+      <ComponentIndustrial>4</ComponentIndustrial>
+    </costList>
+    <statBases>
+      <MaxHitPoints>200</MaxHitPoints>
+      <WorkToBuild>2250</WorkToBuild>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <comps Inherit="false">
+      <li Class="DubsBadHygiene.CompProperties_Pipe">
+        <mode>Sewage</mode>
+      </li>
+      <li Class="DBHPipedWaste.CompProperties_PipedSewageHandler">
+        <compClass>DBHPipedWaste.CompPipedRefinerySewage</compClass>
+        <capacity>225</capacity>
+        <priority>100</priority>
+        <pumpPowerConsumption>50</pumpPowerConsumption>
+        <baseMachinePowerConsumption>170</baseMachinePowerConsumption>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>170</basePowerConsumption>
+        <shortCircuitInRain>true</shortCircuitInRain>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+    </comps>
+    <recipes Inherit="false">
+      <li>DBHPW_MakeChemfuelFromPipedSewage</li>
+    </recipes>
+    <inspectorTabs>
+      <li>ITab_Bills</li>
+    </inspectorTabs>
+    <building>
+      <spawnedConceptLearnOpportunity>BillsTab</spawnedConceptLearnOpportunity>
+      <workTableRoomRole>Workshop</workTableRoomRole>
+      <workTableNotInRoomRoleFactor>0.8</workTableNotInRoomRoleFactor>
+    </building>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <hasInteractionCell>true</hasInteractionCell>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <designationCategory>Production</designationCategory>
+    <surfaceType>Item</surfaceType>
+    <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
+    <placeWorkers>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
+    <researchPrerequisites>
+      <li>Plumbing</li>
+      <li>BiofuelRefining</li>
+    </researchPrerequisites>
+  </ThingDef>
+  <ThingDef ParentName="BasedHygieneMom">
+    <defName>DBHPW_UndergroundSewagePit</defName>
+    <label>underground sewage pit</label>
+    <description>A large underground holding pit for piped sewage. Colonists can extract fecal sludge in batches of 75.</description>
+    <graphicData>
+      <texPath>DBH/Things/Building/Sewage/SepticTank</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+    </graphicData>
+    <size>(2,2)</size>
+    <passability>Standable</passability>
+    <pathCost>0</pathCost>
+    <tickerType>Normal</tickerType>
+    <rotatable>false</rotatable>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+      <li>Stony</li>
+    </stuffCategories>
+    <costStuffCount>150</costStuffCount>
+    <costList>
+      <Steel>150</Steel>
+    </costList>
+    <statBases>
+      <MaxHitPoints>300</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <Flammability>0</Flammability>
+      <Beauty>-12</Beauty>
+      <Cleanliness>-100</Cleanliness>
+    </statBases>
+    <comps>
+      <li Class="DubsBadHygiene.CompProperties_Pipe">
+        <mode>Sewage</mode>
+      </li>
+      <li Class="DBHPipedWaste.CompProperties_PipedSewageHandler">
+        <compClass>DBHPipedWaste.CompUndergroundSewageStorage</compClass>
+        <capacity>7500</capacity>
+        <priority>50</priority>
+      </li>
+      <li Class="CompProperties_Forbiddable" />
+    </comps>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <researchPrerequisites>
+      <li>SepticTanks</li>
+    </researchPrerequisites>
+  </ThingDef>
+</Defs>

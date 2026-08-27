@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_PipedComposter.label>管道堆肥桶</DBHPW_PipedComposter.label>
+  <DBHPW_PipedComposter.description>直接从 DBH 污水管接收污水，并通过五条独立发酵线路将其转化为生物固体。</DBHPW_PipedComposter.description>
+  <DBHPW_PipedBiofuelRefinery.label>管道燃料精炼机</DBHPW_PipedBiofuelRefinery.label>
+  <DBHPW_PipedBiofuelRefinery.description>带污水入口的专用燃料精炼机。唯一配方每次从管道缓存消耗 75 污水并生产 35 化学燃料，不使用实体粪便污泥。</DBHPW_PipedBiofuelRefinery.description>
+  <DBHPW_UndergroundSewagePit.label>地下存粪坑</DBHPW_UndergroundSewagePit.label>
+  <DBHPW_UndergroundSewagePit.description>大型地下管道污水储存坑。殖民者可以每次抽取 75 单位粪便污泥。</DBHPW_UndergroundSewagePit.description>
+</LanguageData>

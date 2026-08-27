@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_SettingsCategory>DBH Piped Waste</DBHPW_SettingsCategory>
+  <DBHPW_SettingRequirePower>Sewage intake pumps require power</DBHPW_SettingRequirePower>
+  <DBHPW_SettingRequirePowerDesc>When enabled, production-building sewage intake pumps consume an additional 50 W. When disabled, the piped composter requires no power and the piped biofuel refinery only consumes its base 170 W. Changes take effect immediately.</DBHPW_SettingRequirePowerDesc>
+  <DBHPW_TransferMode>Transfer sewage</DBHPW_TransferMode>
+  <DBHPW_TransferModeDesc>Block intake and move 1 unit of sewage every 10 ticks to another DBHPW handler on this network.</DBHPW_TransferModeDesc>
+  <DBHPW_BufferInspect>Sewage buffer: {0} / {1}</DBHPW_BufferInspect>
+  <DBHPW_TransferActive>Transfer mode active</DBHPW_TransferActive>
+  <DBHPW_ReservedInspect>Reserved for current bill: {0}</DBHPW_ReservedInspect>
+  <DBHPW_RefineryFallbackInspect>The dedicated piped-sewage recipe is unavailable and this refinery cannot accept sewage.</DBHPW_RefineryFallbackInspect>
+  <DBHPW_InsufficientSewage>Not enough sewage</DBHPW_InsufficientSewage>
+  <DBHPW_RefineryDisabled>The dedicated piped-sewage refinery feature is unavailable.</DBHPW_RefineryDisabled>
+  <DBHPW_ExtractNow>Emergency empty</DBHPW_ExtractNow>
+  <DBHPW_ExtractNowDesc>Toggle on to request one colonist to stay at this pit and extract one batch every 120 ticks until it is empty. Toggle off to cancel the request. Each full batch is 75 sewage.</DBHPW_ExtractNowDesc>
+  <DBHPW_AutoExtract>Automatic extraction</DBHPW_AutoExtract>
+  <DBHPW_AutoExtractDesc>Start extracting at 250 units above the target and stop before a batch would go below the target.</DBHPW_AutoExtractDesc>
+  <DBHPW_TargetLevel>Target storage level</DBHPW_TargetLevel>
+  <DBHPW_TargetLevelDesc>Choose how much sewage automatic extraction should leave in the pit.</DBHPW_TargetLevelDesc>
+  <DBHPW_TargetSlider>Automatic extraction target: {0}%</DBHPW_TargetSlider>
+  <DBHPW_TargetInspect>Automatic extraction target: {0}</DBHPW_TargetInspect>
+  <DBHPW_ManualPending>Emergency emptying requested</DBHPW_ManualPending>
+  <DBHPW_AutoActive>Automatic extraction active</DBHPW_AutoActive>
+  <DBHPW_LinesHeader>Fermentation lines:</DBHPW_LinesHeader>
+  <DBHPW_LineEmpty>—</DBHPW_LineEmpty>
+  <DBHPW_LineReady>Ready</DBHPW_LineReady>
+  <DBHPW_LineInspect>  {0}: {1}</DBHPW_LineInspect>
+  <DBHPW_IdealTemperature>Ideal temperature: {0} ~ {1}</DBHPW_IdealTemperature>
+  <DBHPW_DebugInjectSewage>Debug: inject sewage</DBHPW_DebugInjectSewage>
+  <DBHPW_DebugInjectSewageDesc>Development mode only. Push a chosen amount through this building's DBH sewage network using the original priority and blocked-receiver rules.</DBHPW_DebugInjectSewageDesc>
+  <DBHPW_DebugInjectAmount>Sewage to inject: {0}</DBHPW_DebugInjectAmount>
+  <DBHPW_DebugInjectSuccess>Injected {0} sewage into the network.</DBHPW_DebugInjectSuccess>
+  <DBHPW_DebugInjectNoNetwork>This building is not connected to a DBH sewage network.</DBHPW_DebugInjectNoNetwork>
+  <DBHPW_DebugInjectNoReceiver>Could not inject {0} sewage: the network has no unblocked receiver.</DBHPW_DebugInjectNoReceiver>
+  <DBHPW_DumpPitDebug>Debug: dump pit state</DBHPW_DumpPitDebug>
+  <DBHPW_DumpPitDebugDesc>Developer mode: write this pit, network membership, network identity, and all sewage handlers to Player.log.</DBHPW_DumpPitDebugDesc>
+</LanguageData>

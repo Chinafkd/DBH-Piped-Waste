@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationSequence">
+    <operations>
+      <li Class="PatchOperationReplace"><xpath>Defs/ThingDef[defName="DBHPW_PipedComposter"]/costList/Steel</xpath><value><DankPyon_IronIngot>65</DankPyon_IronIngot></value></li>
+      <li Class="PatchOperationReplace"><xpath>Defs/ThingDef[defName="DBHPW_PipedComposter"]/costList/ComponentIndustrial</xpath><value><DankPyon_ComponentBasic>1</DankPyon_ComponentBasic></value></li>
+      <li Class="PatchOperationReplace"><xpath>Defs/ThingDef[defName="DBHPW_PipedBiofuelRefinery"]/costList/Steel</xpath><value><DankPyon_IronIngot>170</DankPyon_IronIngot></value></li>
+      <li Class="PatchOperationReplace"><xpath>Defs/ThingDef[defName="DBHPW_PipedBiofuelRefinery"]/costList/ComponentIndustrial</xpath><value><DankPyon_ComponentBasic>4</DankPyon_ComponentBasic></value></li>
+      <li Class="PatchOperationReplace"><xpath>Defs/ThingDef[defName="DBHPW_UndergroundSewagePit"]/costList/Steel</xpath><value><DankPyon_IronIngot>150</DankPyon_IronIngot></value></li>
+    </operations>
+  </Operation>
+</Patch>

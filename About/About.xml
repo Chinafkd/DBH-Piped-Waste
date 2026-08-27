@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>DBH Piped Waste</name>
+  <author>Chinafkd</author>
+  <packageId>Chinafkd.DBHPipedWaste</packageId>
+  <modVersion>0.1.5</modVersion>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+    <li>
+      <packageId>Dubwise.DubsBadHygiene</packageId>
+      <displayName>Dubs Bad Hygiene</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/836308268</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>Dubwise.DubsBadHygiene</li>
+    <li>ElderSign.DBHforMedieval</li>
+    <li>DankPyon.Medieval.Overhaul</li>
+  </loadAfter>
+  <description>Adds a piped composter, piped biofuel refinery, and underground sewage pit to Dubs Bad Hygiene. Production buildings request sewage directly from the fullest underground pit, while overflow protection and emergency extraction preserve sewage resources.</description>
+</ModMetaData>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DBHPW_MakeChemfuelFromPipedSewage.label>用管道污水制作化学燃料</DBHPW_MakeChemfuelFromPipedSewage.label>
+  <DBHPW_MakeChemfuelFromPipedSewage.description>将精炼机管道缓存中的 75 单位污水精炼为化学燃料。</DBHPW_MakeChemfuelFromPipedSewage.description>
+  <DBHPW_MakeChemfuelFromPipedSewage.jobString>正在用管道污水精炼化学燃料。</DBHPW_MakeChemfuelFromPipedSewage.jobString>
+</LanguageData>

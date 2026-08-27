@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorkGiverDef>
+    <defName>DBHPW_UnloadPipedComposter</defName><label>unload piped composter</label><giverClass>DBHPipedWaste.WorkGiver_UnloadPipedComposter</giverClass>
+    <workType>Hauling</workType><verb>unload</verb><gerund>unloading</gerund><priorityInType>20</priorityInType>
+    <requiredCapacities><li>Manipulation</li></requiredCapacities>
+  </WorkGiverDef>
+  <WorkGiverDef>
+    <defName>DBHPW_ExtractSewage</defName><label>extract sewage</label><giverClass>DBHPipedWaste.WorkGiver_ExtractSewage</giverClass>
+    <workType>Hauling</workType><verb>extract</verb><gerund>extracting</gerund><priorityInType>98</priorityInType>
+    <requiredCapacities><li>Manipulation</li></requiredCapacities>
+  </WorkGiverDef>
+  <WorkGiverDef>
+    <defName>DBHPW_RefinePipedSewage</defName><label>refine piped sewage</label><giverClass>WorkGiver_DoBill</giverClass>
+    <workType>Crafting</workType><verb>refine</verb><gerund>refining</gerund><priorityInType>97</priorityInType>
+    <fixedBillGiverDefs><li>DBHPW_PipedBiofuelRefinery</li></fixedBillGiverDefs>
+    <requiredCapacities><li>Manipulation</li></requiredCapacities><prioritizeSustains>true</prioritizeSustains>
+  </WorkGiverDef>
+</Defs>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <RecipeDef>
+    <defName>DBHPW_MakeChemfuelFromPipedSewage</defName>
+    <label>make chemfuel from piped sewage</label>
+    <description>Refine 75 units of sewage held in the refinery's pipe buffer into chemfuel.</description>
+    <jobString>refining chemfuel from piped sewage</jobString>
+    <effectWorking>Cremate</effectWorking>
+    <soundWorking>Recipe_Cremate</soundWorking>
+    <workAmount>3000</workAmount>
+    <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+    <products><Chemfuel>35</Chemfuel></products>
+  </RecipeDef>
+</Defs>
