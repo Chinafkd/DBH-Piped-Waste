@@ -29,10 +29,10 @@ namespace DBHPipedWaste
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            LongEventHandler.ExecuteWhenFinished(RemoveUnsupportedSavedBills);
+            LongEventHandler.ExecuteWhenFinished(RemoveDuplicateSavedPipedBills);
         }
 
-        private void RemoveUnsupportedSavedBills()
+        private void RemoveDuplicateSavedPipedBills()
         {
             Building_WorkTable workTable = parent as Building_WorkTable;
             if (workTable?.BillStack == null)
@@ -51,10 +51,7 @@ namespace DBHPipedWaste
                 }
 
                 bool isDedicated = PipedRefineryUtility.IsDedicatedPipedRecipe(bill.recipe);
-                bool isVanillaRefineryRecipe = bill.recipe?.defName == "Make_ChemfuelFromWood" ||
-                    bill.recipe?.defName == "Make_ChemfuelFromOrganics";
-                if (isVanillaRefineryRecipe ||
-                    (isDedicated && (!PipedRefineryUtility.PipedRecipeSupported || dedicatedBillKept)))
+                if (isDedicated && (!PipedRefineryUtility.PipedRecipeSupported || dedicatedBillKept))
                 {
                     workTable.BillStack.Delete(bill);
                     removed++;
@@ -68,7 +65,7 @@ namespace DBHPipedWaste
             }
             if (removed > 0)
             {
-                Log.Message("[DBH Piped Waste] Removed " + removed + " stale refinery bill(s) from " + parent.ThingID + ".");
+                Log.Message("[DBH Piped Waste] Removed " + removed + " duplicate or disabled piped refinery bill(s) from " + parent.ThingID + ".");
             }
         }
 

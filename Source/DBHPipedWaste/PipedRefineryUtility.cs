@@ -45,6 +45,12 @@ namespace DBHPipedWaste
     public static class PipedRefineryUtility
     {
         private const string PipedRecipeDefName = "DBHPW_MakeChemfuelFromPipedSewage";
+        private static readonly string[] StandardRefineryRecipeDefNames =
+        {
+            "Make_ChemfuelFromWood",
+            "Make_ChemfuelFromOrganics",
+            "Make_ChemfuelFromFecalSludge"
+        };
         private const float RequiredSewage = SewageDisposalUtility.ExtractionBatchSize;
         private static bool configured;
         private static bool structureSupported;
@@ -88,17 +94,36 @@ namespace DBHPipedWaste
                 {
                     PipedRecipe.recipeUsers.RemoveAll(user => user == pipedRefineryDef);
                 }
-                pipedRefineryDef.recipes = new List<RecipeDef> { PipedRecipe };
+                pipedRefineryDef.recipes = BuildRefineryRecipeList();
                 structureSupported = true;
                 disabledReason = null;
                 Log.Message("[DBH Piped Waste] Dedicated piped refinery recipe enabled: " + RequiredSewage +
-                    " sewage -> 35 chemfuel; capacity " + properties.capacity + "; recipe entries 1; recipe users excluded to avoid duplicate registration.");
+                    " sewage -> 35 chemfuel; capacity " + properties.capacity + "; recipe entries " +
+                    pipedRefineryDef.recipes.Count + "; recipe users excluded to avoid duplicate registration.");
             }
             catch (Exception exception)
             {
                 ValidationFailure = PipedRefineryValidationFailure.ValidationException;
                 FailStructure("exception while validating recipe: " + exception);
             }
+        }
+
+        private static List<RecipeDef> BuildRefineryRecipeList()
+        {
+            List<RecipeDef> recipes = new List<RecipeDef>();
+            foreach (string defName in StandardRefineryRecipeDefNames)
+            {
+                RecipeDef recipe = DefDatabase<RecipeDef>.GetNamedSilentFail(defName);
+                if (recipe != null && !recipes.Contains(recipe))
+                {
+                    recipes.Add(recipe);
+                }
+            }
+            if (PipedRecipe != null && !recipes.Contains(PipedRecipe))
+            {
+                recipes.Add(PipedRecipe);
+            }
+            return recipes;
         }
 
         public static PipedRefineryValidationResult ValidatePipedRefineryStructure()

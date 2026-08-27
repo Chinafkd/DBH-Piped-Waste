@@ -7,7 +7,7 @@
     <jobString>refining chemfuel from piped sewage</jobString>
     <effectWorking>Cremate</effectWorking>
     <soundWorking>Recipe_Cremate</soundWorking>
-    <workAmount>3000</workAmount>
+    <workAmount>1500</workAmount>
     <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
     <products><Chemfuel>35</Chemfuel></products>
   </RecipeDef>
