@@ -1,4 +1,4 @@
-# DBH Piped Waste 0.1.5-test 静态验证报告
+# DBH: Piped Sewage Processing 0.1.5-test 静态验证报告
 
 验证基准：RimWorld 1.6.4871 rev591、Dubs Bad Hygiene 3.1.2800、Harmony 2.4.2.0；本机检查日期 2026-08-26。
 

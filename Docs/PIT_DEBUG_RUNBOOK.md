@@ -4,7 +4,7 @@
 
 ## 准备
 
-1. 使用 `Demo/DBHPipedWaste` 作为 RimWorld Mod 目录中的测试 Mod，确保加载顺序为 Harmony → Dubs Bad Hygiene → DBH Piped Waste。
+1. 使用 `Demo/DBHPipedWaste` 作为 RimWorld Mod 目录中的测试 Mod，确保加载顺序为 Harmony → Dubs Bad Hygiene → DBH: Piped Sewage Processing。
 2. 打开 RimWorld Developer mode。
 3. 新建测试地图，先只放置一条 DBH 管道、一个地下存粪坑和一个会产生污水需求的 Fixture（建议先用 Latrine）。
 4. 选中存粪坑，点击 `调试：导出存粪坑状态`。该按钮只写日志，不修改游戏状态。

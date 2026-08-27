@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <DBHPW_SettingsCategory>DBH Piped Waste</DBHPW_SettingsCategory>
+  <DBHPW_SettingsCategory>DBH: Piped Sewage Processing</DBHPW_SettingsCategory>
   <DBHPW_SettingRequirePower>Sewage intake pumps require power</DBHPW_SettingRequirePower>
   <DBHPW_SettingRequirePowerDesc>When enabled, production-building sewage intake pumps consume an additional 50 W. When disabled, the piped composter requires no power and the piped biofuel refinery only consumes its base 170 W. Changes take effect immediately.</DBHPW_SettingRequirePowerDesc>
   <DBHPW_TransferMode>Transfer sewage</DBHPW_TransferMode>

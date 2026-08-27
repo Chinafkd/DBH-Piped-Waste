@@ -1,11 +1,11 @@
-# DBH Piped Waste 0.1.5-test 实机测试清单
+# DBH: Piped Sewage Processing 0.1.5-test 实机测试清单
 
 测试日期：____________  测试存档：____________  测试人：____________
 
 ## 一、测试环境
 
-- [y ] 完全退出并重新启动 RimWorld，Mod 列表显示 `DBH Piped Waste 0.1.5-test`。
-- [y ] 测试环境只启用 Harmony、RimWorld、Dubs Bad Hygiene 与 DBH Piped Waste。
+- [y ] 完全退出并重新启动 RimWorld，Mod 列表显示 `DBH: Piped Sewage Processing 0.1.5-test`。
+- [y ] 测试环境只启用 Harmony、RimWorld、Dubs Bad Hygiene 与 DBH: Piped Sewage Processing。
 - [y ] 载入测试存档后没有立即出现归属于 `DBHPipedWaste` 的红字。
 - [y ] 开启开发者模式；关闭开发者模式时，本 Mod 三种建筑不显示“调试：注入污水”。
 

@@ -9,6 +9,6 @@ respective creators and are not relicensed by this project:
 - **Harmony**, by the Harmony contributors.
 
 The mod's XML references third-party definitions and runtime assemblies; it
-does not redistribute those dependencies. The original DBH Piped Waste source,
+does not redistribute those dependencies. The original DBH: Piped Sewage Processing source,
 XML, translations and documentation are released under the MIT License in
 `LICENSE`.

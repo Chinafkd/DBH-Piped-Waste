@@ -1,4 +1,4 @@
-# DBH Piped Waste publishing guide
+# DBH: Piped Sewage Processing publishing guide
 
 ## Final artifacts
 
@@ -39,7 +39,7 @@ WorkshopUpload directory.
 5. **DBH for Medieval** and **Medieval Overhaul** are optional integrations.
 6. Complete the final Workshop upload confirmation as the author.
 
-Suggested title: `DBH Piped Waste`
+Suggested title: `DBH: Piped Sewage Processing`
 
 Suggested short description:
 

@@ -52,6 +52,8 @@ $githubRoot = Resolve-ProjectPath "GitHub"
 $runtimeStage = Resolve-ProjectPath "_package_staging\DBHPipedWaste"
 $sourceStage = Resolve-ProjectPath "_package_staging\DBH-Piped-Waste"
 $githubSource = Resolve-ProjectPath "GitHub\DBH-Piped-Waste"
+$githubMetadataPath = Join-Path $githubSource ".git"
+$githubMetadataBackup = Resolve-ProjectPath "GitHub\.DBH-Piped-Waste.git"
 $existingPublishedFileIdPath = Resolve-ProjectPath "Release\WorkshopUpload\DBHPipedWaste\About\PublishedFileId.txt"
 $publishedFileId = $null
 if (Test-Path -LiteralPath $existingPublishedFileIdPath -PathType Leaf) {
@@ -66,6 +68,12 @@ Remove-GeneratedPath "Release\DBHPipedWaste"
 Remove-GeneratedPath "Release\WorkshopUpload\DBHPipedWaste"
 Remove-GeneratedPath "Release\DBHPipedWaste-$Version.zip"
 Remove-GeneratedPath "GitHub\DBH-Piped-Waste-Source-$Version.zip"
+if ((Test-Path -LiteralPath $githubMetadataPath) -and (Test-Path -LiteralPath $githubMetadataBackup)) {
+    throw "Both Git metadata locations exist; refusing to overwrite either one."
+}
+if (Test-Path -LiteralPath $githubMetadataPath) {
+    Move-Item -LiteralPath $githubMetadataPath -Destination $githubMetadataBackup
+}
 Remove-GeneratedPath "GitHub\DBH-Piped-Waste"
 Remove-GeneratedPath "_package_staging"
 
@@ -118,6 +126,9 @@ New-Item -ItemType Directory -Path (Split-Path -Parent $releaseMod),(Split-Path 
 Copy-Item -LiteralPath $runtimeStage -Destination $releaseMod -Recurse -Force
 Copy-Item -LiteralPath $runtimeStage -Destination $workshopMod -Recurse -Force
 Copy-Item -LiteralPath $sourceStage -Destination $githubSource -Recurse -Force
+if (Test-Path -LiteralPath $githubMetadataBackup) {
+    Move-Item -LiteralPath $githubMetadataBackup -Destination (Join-Path $githubSource ".git")
+}
 if ($publishedFileId) {
     Set-Content -LiteralPath (Join-Path $workshopMod "About\PublishedFileId.txt") -Value $publishedFileId -Encoding Ascii -NoNewline
 }

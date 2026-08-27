@@ -1,4 +1,4 @@
-# DBH Piped Waste 0.1.5
+# DBH: Piped Sewage Processing 0.1.5
 
 这是一个面向 RimWorld 1.6 与 Dubs Bad Hygiene 3.1.2800 的发布版本，作者为 Chinafkd。
 
@@ -38,7 +38,7 @@
 
 1. 确认启用 Harmony 与 Dubs Bad Hygiene。
 2. 将 `Demo/DBHPipedWaste` 整个文件夹复制到 RimWorld 的 `Mods` 目录。
-3. 加载顺序使用：Harmony → Dubs Bad Hygiene → 可选兼容 Mod → DBH Piped Waste。
+3. 加载顺序使用：Harmony → Dubs Bad Hygiene → 可选兼容 Mod → DBH: Piped Sewage Processing。
 4. 第一次测试建议新建地图，并按 `Docs/TEST_MATRIX.md` 逐项记录。
 
 当前仓库提供三类交付物：`Release/DBHPipedWaste-0.1.5.zip` 是可直接安装的运行时 Mod 包，`Release/WorkshopUpload/DBHPipedWaste` 是 Steam Workshop 上传目录，`GitHub/DBH-Piped-Waste-Source-0.1.5.zip` 是包含源码、文档和构建脚本的源代码包。源码项目使用 `build.ps1` 编译，使用 `build_demo.ps1` 重新生成干净测试目录，使用 `build_release.ps1` 一次性重建发布包。
