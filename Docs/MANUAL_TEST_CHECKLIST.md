@@ -1,10 +1,10 @@
-# DBH: Piped Sewage Processing 0.1.5-test 实机测试清单
+# DBH: Piped Sewage Processing 0.1.6 实机测试清单
 
 测试日期：____________  测试存档：____________  测试人：____________
 
 ## 一、测试环境
 
-- [y ] 完全退出并重新启动 RimWorld，Mod 列表显示 `DBH: Piped Sewage Processing 0.1.5-test`。
+- [ ] 完全退出并重新启动 RimWorld，Mod 列表显示 `DBH: Piped Sewage Processing 0.1.6`。
 - [y ] 测试环境只启用 Harmony、RimWorld、Dubs Bad Hygiene 与 DBH: Piped Sewage Processing。
 - [y ] 载入测试存档后没有立即出现归属于 `DBHPipedWaste` 的红字。
 - [y ] 开启开发者模式；关闭开发者模式时，本 Mod 三种建筑不显示“调试：注入污水”。
@@ -93,11 +93,16 @@
 - [y ] 打开“添加账单”菜单，只显示一个管道污水化学燃料配方。
 - [y ] 反复打开和关闭账单列表，不出现红字。
 - [y ] 添加专用账单后等待小人扫描工作，不出现 `TryFindBestBillIngredients`、`missingIngredients` 或 `DBHPW_RefinePipedSewage` 异常。
-- [y ] 精炼机不会显示或接受原版木材、食物、粪便污泥及其他非专用配方。
+- [ ] 精炼机显示原版木材、有机物、DBH 粪便污泥与专用管道污水配方，且每种只显示一次。
+- [ ] 启用给原版 `BiofuelRefinery` 增加配方的第三方 Mod 后，该普通配方会自动出现，并继续搬运、消耗它原本的实体原料。
+- [ ] 启用给原版精炼器或 DBH `BurnPit` 增加粪便污泥配方的第三方 Mod 后，安全兼容的配方会自动出现；生产时不搬运实体粪便污泥，而是准确预留并扣除对应数量的管道污水。
+- [ ] 启用 `TSP.BathroomHumor` 后，牛粪饼、基础粪肥木料、`Bulk I–VII` 和粪泥 Butt Stone 共 10 个配方全部出现；普通且禁止 `FecalSludge` 的 Butt Stone 配方不出现；精炼器容量为 1000 L。
+- [ ] 含自定义 `RecipeWorker`、半成品、特殊产物或依赖原料材质产物的配方不会被自动转成污水配方。
+- [ ] `Player.log` 中的自动继承、自动污水替代、最终配方数与容量日志符合当前启用的 Mod 列表。
 
 ### 8.2 自动接收与转移
 
-- [y ] 精炼机为 0/225 L、通电开启、关闭手动转移；存粪坑有污水时，下一次自动脉冲开始获得污水。
+- [ ] 精炼机为 0 L、通电开启、关闭手动转移；存粪坑有污水时，下一次自动脉冲开始获得污水；启用大配方后容量至少等于最大单次污水需求。
 - [y ] 精炼机开启手动“转移污水”后停止自动吸污，并按每 10 ticks最多 1 L向外转移。
 - [y ] 关闭精炼机手动转移后恢复自动吸污。
 

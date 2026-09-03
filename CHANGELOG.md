@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.6
+
+- Automatically mirror recipes currently registered on the standard
+  `BiofuelRefinery`, including recipes added through either `ThingDef.recipes`
+  or `RecipeDef.recipeUsers`.
+- Automatically expose safe fecal-sludge recipes from the standard refinery or
+  DBH burn pit as pipe-backed bills on the piped refinery. Their sewage cost is
+  calculated from the recipe and current bill instead of being fixed at 75.
+- Keep ordinary inherited recipes on their original physical ingredients and
+  leave every third-party `RecipeDef` unchanged outside the piped refinery.
+- Reject unsafe automatic substitutions that use custom recipe workers,
+  unfinished items, special products, or ingredient-dependent stuff products.
+- Scale the refinery's sewage buffer to the largest discovered pipe-backed
+  recipe and preserve fail-closed reservation and rollback behavior.
+- Remove per-Mod load-order hints; automatic compatibility no longer depends on
+  package-ID allowlists.
+
 ## 0.1.5
 
 - Prepared the first publishable RimWorld 1.6 package.

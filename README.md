@@ -1,11 +1,11 @@
-# DBH: Piped Sewage Processing 0.1.5
+# DBH: Piped Sewage Processing 0.1.6
 
 这是一个面向 RimWorld 1.6 与 Dubs Bad Hygiene 3.1.2800 的发布版本，作者为 Chinafkd。
 
 当前提供三个独立建筑：
 
 - 管道堆肥桶：priority 100，250 污水缓冲，5 条各 50 单位的独立发酵线路。
-- 管道燃料精炼机：priority 100，225 污水容量；同时提供原版木材和有机物配方、DBH 粪便污泥配方，以及一个每次消耗 75 污水并生产 35 化学燃料的专用管道配方。
+- 管道燃料精炼机：priority 100，基础污水容量为 225；自动继承当前挂在原版 `BiofuelRefinery` 上的配方，并提供每次消耗 75 污水、生产 35 化学燃料的专用管道配方。
 - 地下存粪坑：priority 50，7500 污水容量，支持自动每批抽取 75，以及由同一殖民者持续执行、每 120 ticks 最多抽取 75 的可开关“紧急抽空”。
 
 三者仍通过 `CompSewageHandler` 接入 DBH 管网，因此厕所等设施产生的新污水仍由 DBH 的 `PlumbingNet.PushSewage()` 负责公共分配。已经进入本 Mod 存储中的污水属于 DBHPW 内部库存：自动供污和手动转移只在本 Mod 的组件之间直接扣减/增加，不调用 DBH 的二次传送，也不会修改其它 Mod 的 `Blocked` 状态。
@@ -14,9 +14,13 @@
 
 管道堆肥桶和管道燃料精炼机也使用相同的超额保护：当 DBH 外部入口导致其缓冲超过各自配置容量（250 L / 225 L）时，先尝试向其它接收端 `PushSewage()`；连续 3000 ticks 无法释放时，将超额部分排入设备占地格的地面污水网格并扣除。
 
-管道燃料精炼机明确使用普通 tick，与堆肥桶复用同一套管道接收、30-tick 自动申请和 10-tick 手动转移逻辑。配方菜单从建筑端注册标准精炼配方和一个专用管道污水配方；专用配方不会通过 `recipeUsers` 再次注册，因此不会重复显示。
+管道燃料精炼机明确使用普通 tick，与堆肥桶复用同一套管道接收、30-tick 自动申请和 10-tick 手动转移逻辑。启动时会同时读取原版精炼器的 `ThingDef.recipes` 与各 `RecipeDef.recipeUsers`，所以其他 Mod 后加载到原版精炼器的普通配方会自动出现在管道精炼器中。最终所有配方只从建筑端注册，避免同一个配方因双重入口而重复显示。
 
-殖民者生产重新使用 RimWorld 原版精炼器的 `WorkGiver_DoBill` 流程；Mod 只在原料检查阶段把精炼器缓存中的 75 L 污水视为本次虚拟原料，在任务开始时预留，并在成品生成阶段扣除。旧版专用 JobDef 仍保留，只用于兼容升级时可能仍在执行的旧任务。
+普通继承配方仍使用它们原本的木材、食物、化学燃料等实体原料。只有满足安全条件的粪便污泥配方，才会在“管道精炼机”这个上下文中自动改用缓存污水：配方的全部原料槽都必须允许 `FecalSludge`，并且不能使用自定义配方执行器、半成品、特殊产物或依赖原料材质的产物。第三方原始 `RecipeDef` 不会被修改，因此同一配方在原来的工作台上仍按原规则消耗实体原料。
+
+已核对 `TSP.BathroomHumor` 的 RimWorld 1.6 定义：牛粪饼、基础粪肥木料、`Bulk I–VII` 七档批量粪肥木料，以及 `TSP_CondenseToButtStoneChunkWithFecalSludge` 共 10 个配方都会自动挂载并改用管道污水。另一个明确禁止 `FecalSludge` 的普通 Butt Stone 配方不会被误选。此兼容来自上述通用特征判断，不依赖 TSP 的 packageId 白名单。
+
+殖民者生产继续使用 RimWorld 原版 `WorkGiver_DoBill` 流程。管道污水需求根据第三方配方及当前账单动态计算，在任务开始时预留，并在成品生成前再次核对后原子扣除；取消任务会释放预留，成品生成异常会完整回滚。若发现的兼容配方需要超过 225 污水，精炼机运行时容量会自动提高到其中最大的单次需求。旧版专用 JobDef 仍保留，只用于兼容升级时可能仍在执行的旧任务。
 
 原料检查补丁兼容 RimWorld 只查询“能否生产”而不提供缺料列表的扫描路径；账单列表变化与生产完成后的下一轮工作搜索不会再因空的 `missingIngredients` 参数报错。
 
@@ -41,6 +45,6 @@
 3. 加载顺序使用：Harmony → Dubs Bad Hygiene → 可选兼容 Mod → DBH: Piped Sewage Processing。
 4. 第一次测试建议新建地图，并按 `Docs/TEST_MATRIX.md` 逐项记录。
 
-当前仓库提供三类交付物：`Release/DBHPipedWaste-0.1.5.zip` 是可直接安装的运行时 Mod 包，`Release/WorkshopUpload/DBHPipedWaste` 是 Steam Workshop 上传目录，`GitHub/DBH-Piped-Waste-Source-0.1.5.zip` 是包含源码、文档和构建脚本的源代码包。源码项目使用 `build.ps1` 编译，使用 `build_demo.ps1` 重新生成干净测试目录，使用 `build_release.ps1` 一次性重建发布包。
+当前仓库提供三类交付物：`Release/DBHPipedWaste-0.1.6.zip` 是可直接安装的运行时 Mod 包，`Release/WorkshopUpload/DBHPipedWaste` 是 Steam Workshop 上传目录，`GitHub/DBH-Piped-Waste-Source-0.1.6.zip` 是包含源码、文档和构建脚本的源代码包。源码项目使用 `build.ps1` 编译，使用 `build_demo.ps1` 重新生成干净测试目录，使用 `build_release.ps1` 一次性重建发布包。
 
 本版本已内置由项目游戏截图制作的 Workshop 预览图，文件位于 `About/Preview.png`。

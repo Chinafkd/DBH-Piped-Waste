@@ -92,9 +92,13 @@ namespace DBHPipedWaste
 
         private bool ReservationIsValid()
         {
-            return reservationPawn != null && reservationPawn.CurJob != null &&
-                reservationPawn.CurJob.RecipeDef == PipedRefineryUtility.PipedRecipe &&
-                reservationPawn.CurJob.targetA.Thing == parent;
+            if (reservationPawn == null ||
+                !PipedRefineryUtility.IsSewageBackedJob(reservationPawn.CurJob, out float requiredSewage))
+            {
+                return false;
+            }
+
+            return Mathf.Abs(ReservedSewage - requiredSewage) <= SewageNetworkUtility.AutomaticSupplyEpsilon;
         }
 
         public bool TryReserveSewage(Pawn pawn, float amount)

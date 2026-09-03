@@ -44,11 +44,6 @@ namespace DBHPipedWaste
                     "TryFindBestBillIngredients",
                     "bool TryFindBestBillIngredients(Bill, Pawn, Thing, List<ThingCount>, List<IngredientCount>)"),
                 new RefineryPatchSpec(
-                    typeof(Patch_WorkGiver_DoBill_StartOrResumeBillJob),
-                    typeof(WorkGiver_DoBill),
-                    "StartOrResumeBillJob",
-                    "Job StartOrResumeBillJob(Pawn, IBillGiver, bool)"),
-                new RefineryPatchSpec(
                     typeof(Patch_JobDriver_DoBill_TryMakePreToilReservations),
                     typeof(JobDriver_DoBill),
                     "TryMakePreToilReservations",

@@ -1,4 +1,4 @@
-# DBH: Piped Sewage Processing 0.1.5-test 静态验证报告
+# DBH: Piped Sewage Processing 0.1.6 静态验证报告
 
 验证基准：RimWorld 1.6.4871 rev591、Dubs Bad Hygiene 3.1.2800、Harmony 2.4.2.0；本机检查日期 2026-08-26。
 
@@ -43,6 +43,9 @@
 - 堆肥桶建筑的资源结算入口已由 `SettleContents()` 统一命名为 `SettleResources()`，与组件层的 `SettleResources()` 语义对齐；结算顺序和资源去向未改变。
 - `1.6/Defs/ThingDefs_Buildings/DBHPW_Buildings.xml` 已完成样式整理：嵌套 Def 字段改为一行一个标签，字段值、顺序和 XML 语义未改变；全套 1.6 XML 已重新解析通过。
 - Refinery 成品生成异常时，`RestoreConsumed()` 现在完整恢复已扣除的污水，即使设备在事务开始前已经超过容量；Overflow 不再在回滚阶段被截断，而是交由既有的低频 Overflow relief 路径处理。
+- Refinery 配方入口现在自动合并原版 `BiofuelRefinery` 的 `ThingDef.recipes` 与 `RecipeDef.recipeUsers`，并统一从管道精炼器的建筑配方列表注册；不再依赖第三方 packageId 白名单，也不会为同一关系同时保留两个注册入口。
+- 只有全部原料槽都允许 `FecalSludge`、使用标准 `RecipeWorker` 且不依赖半成品、特殊产物或原料材质的配方，才会在管道精炼器上下文中改用污水；第三方原 `RecipeDef` 与其原工作台行为保持不变。
+- 自动污水配方的需求由 `IngredientCount.CountRequiredOfFor()` 按当前 Bill 计算，预约、有效性检查、完成前复核、扣除和异常回滚使用同一需求；运行时缓存容量至少覆盖发现的最大单次需求。
 - Refinery 配方注册已统一为单一入口：启动校验成功时只保留 `RefineryDef.recipes` 中的专用配方，并从 `RecipeDef.recipeUsers` 移除该 Refinery，避免同一个 RecipeDef 在账单菜单中重复显示；校验失败时仍会从两侧移除。
 - Emergency Extraction 的小数残量条件已统一为 `HasWholeSewageUnit`：WorkGiver、Job `FailOn` 与循环 `JumpIf` 均与实际 `FloorToInt()` 抽取规则一致，`0.7 L` 不再创建无效抽取 Job。
 - Refinery Fail-Closed 最终一致性审计已完成：WorkGiver、Job 创建/预留、Vanilla 成品生成包装、旧版 JobDriver、Cleanup、存档 Bill 与 Def 配方索引均具备一致的专用配方可执行性检查；未发现新的免费产出或预留泄漏路径。

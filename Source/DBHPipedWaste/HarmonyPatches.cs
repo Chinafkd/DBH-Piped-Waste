@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DubsBadHygiene;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -19,14 +20,15 @@ namespace DBHPipedWaste
             List<IngredientCount> missingIngredients,
             ref bool __result)
         {
-            if (bill == null || !PipedRefineryUtility.IsDedicatedPipedRecipe(bill.recipe))
+            if (bill == null || !PipedRefineryUtility.IsSewageBackedRecipe(bill.recipe) ||
+                billGiver?.TryGetComp<CompPipedRefinerySewage>() == null)
             {
                 return true;
             }
 
             chosen?.Clear();
             missingIngredients?.Clear();
-            if (!PipedRefineryUtility.IsPipedBill(bill.recipe, billGiver))
+            if (!PipedRefineryUtility.IsSewageBackedBill(bill, billGiver, out float requiredSewage))
             {
                 __result = false;
                 JobFailReason.Is("DBHPW_RefineryDisabled".Translate());
@@ -34,7 +36,7 @@ namespace DBHPipedWaste
             }
 
             CompPipedRefinerySewage handler = billGiver.TryGetComp<CompPipedRefinerySewage>();
-            if (handler.AvailableForProduction >= PipedRefineryUtility.SewagePerBill)
+            if (handler.AvailableForProduction >= requiredSewage)
             {
                 __result = true;
             }
@@ -44,39 +46,6 @@ namespace DBHPipedWaste
                 JobFailReason.Is("DBHPW_InsufficientSewage".Translate());
             }
             return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(WorkGiver_DoBill), "StartOrResumeBillJob")]
-    public static class Patch_WorkGiver_DoBill_StartOrResumeBillJob
-    {
-        public static bool Prefix(
-            IBillGiver giver,
-            ref Job __result)
-        {
-            Thing billGiverThing = giver as Thing;
-            Bill bill = PipedRefineryUtility.FindDedicatedPipedBill(billGiverThing);
-            if (bill == null)
-            {
-                return true;
-            }
-
-            if (!PipedRefineryUtility.IsPipedBill(bill.recipe, billGiverThing))
-            {
-                __result = null;
-                JobFailReason.Is("DBHPW_RefineryDisabled".Translate());
-                return false;
-            }
-
-            CompPipedRefinerySewage handler = billGiverThing.TryGetComp<CompPipedRefinerySewage>();
-            if (handler != null && handler.AvailableForProduction < PipedRefineryUtility.SewagePerBill)
-            {
-                __result = null;
-                JobFailReason.Is("DBHPW_InsufficientSewage".Translate());
-                return false;
-            }
-
-            return true;
         }
     }
 
@@ -219,12 +188,12 @@ namespace DBHPipedWaste
         public static void Postfix(JobDriver_DoBill __instance, ref bool __result)
         {
             Job job = __instance?.job;
-            if (job == null || !PipedRefineryUtility.IsDedicatedPipedRecipe(job.RecipeDef))
+            if (job == null || !PipedRefineryUtility.IsSewageBackedRecipe(job.RecipeDef))
             {
                 return;
             }
 
-            if (!PipedRefineryUtility.IsPipedBill(job.RecipeDef, job.targetA.Thing))
+            if (!PipedRefineryUtility.IsSewageBackedJob(job, out float requiredSewage))
             {
                 __result = false;
                 return;
@@ -235,7 +204,7 @@ namespace DBHPipedWaste
             }
 
             CompPipedRefinerySewage handler = PipedRefineryUtility.HandlerFor(job);
-            if (handler == null || !handler.TryReserveSewage(__instance.pawn, PipedRefineryUtility.SewagePerBill))
+            if (handler == null || !handler.TryReserveSewage(__instance.pawn, requiredSewage))
             {
                 __result = false;
             }
@@ -259,20 +228,22 @@ namespace DBHPipedWaste
                     return;
                 }
 
-                if (!PipedRefineryUtility.IsDedicatedPipedRecipe(job.RecipeDef))
+                if (!PipedRefineryUtility.IsSewageBackedRecipe(job.RecipeDef))
                 {
                     original?.Invoke();
                     return;
                 }
 
-                if (!PipedRefineryUtility.IsPipedBill(job.RecipeDef, job.targetA.Thing))
+                if (!PipedRefineryUtility.IsSewageBackedJob(job, out float requiredSewage))
                 {
                     pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
                     return;
                 }
 
                 CompPipedRefinerySewage handler = PipedRefineryUtility.HandlerFor(job);
-                if (handler == null || !handler.TryConsumeReservation(pawn, out float consumed))
+                if (handler == null ||
+                    Mathf.Abs(handler.ReservedSewage - requiredSewage) > SewageNetworkUtility.AutomaticSupplyEpsilon ||
+                    !handler.TryConsumeReservation(pawn, out float consumed))
                 {
                     pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
                     return;

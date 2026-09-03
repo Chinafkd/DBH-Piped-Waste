@@ -2,11 +2,12 @@
 
 ## Final artifacts
 
-- Runtime release ZIP: `Release/DBHPipedWaste-0.1.5.zip`
-- Source release ZIP: `GitHub/DBH-Piped-Waste-Source-0.1.5.zip`
+- Runtime release ZIP: `Release/DBHPipedWaste-0.1.6.zip`
+- Source release ZIP: `GitHub/DBH-Piped-Waste-Source-0.1.6.zip`
 - Workshop upload directory: `Release/WorkshopUpload/DBHPipedWaste`
+- Steam Workshop PublishedFileId: `3791002569`
 - Package ID: `Chinafkd.DBHPipedWaste`
-- Mod version: `0.1.5`
+- Mod version: `0.1.6`
 
 The runtime ZIP is a RimWorld Mod package. Extract it so the resulting
 `DBHPipedWaste` directory directly contains `About`, `1.6` and
@@ -45,14 +46,20 @@ Suggested short description:
 
 > Adds a piped composter, piped biofuel refinery and underground sewage pit to
 > Dubs Bad Hygiene. Production buildings draw directly from the fullest pit,
-> with overflow protection, emergency extraction and optional Medieval Overhaul
-> integration.
+> with overflow protection, emergency extraction, automatic refinery recipe
+> inheritance and safe pipe-backed fecal-sludge recipe compatibility.
 
 The release includes the project-owned `About/Preview.png` at 1024 x 352. It is
 generated from the two in-game screenshots and is ready to use as the Workshop
 preview image.
 
-For the first upload, `About/PublishedFileId.txt` must be absent. RimWorld and
-Steam will create the real Workshop item and write its ID after a successful
-publish. Preserve that generated file for later updates so a new duplicate item
-is not created.
+This Mod is already published as Workshop item `3791002569`. The release build
+always writes that value to
+`Release/WorkshopUpload/DBHPipedWaste/About/PublishedFileId.txt` and refuses to
+continue if an existing upload directory contains a different ID. Use the
+`WorkshopUpload` directory when updating Steam so RimWorld updates the existing
+item instead of creating a duplicate.
+
+The ordinary runtime ZIP intentionally omits `PublishedFileId.txt`, matching the
+0.1.5 install-package layout. That ZIP is for manual installation and does not
+control which Steam Workshop item is updated.

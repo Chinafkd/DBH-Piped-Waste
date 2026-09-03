@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -45,13 +46,12 @@ namespace DBHPipedWaste
     public static class PipedRefineryUtility
     {
         private const string PipedRecipeDefName = "DBHPW_MakeChemfuelFromPipedSewage";
-        private static readonly string[] StandardRefineryRecipeDefNames =
-        {
-            "Make_ChemfuelFromWood",
-            "Make_ChemfuelFromOrganics",
-            "Make_ChemfuelFromFecalSludge"
-        };
+        private const string FecalSludgeDefName = "FecalSludge";
+        private const string VanillaBiofuelRefineryDefName = "BiofuelRefinery";
+        private const string BurnPitDefName = "BurnPit";
+        private const string DBHFecalChemfuelRecipeDefName = "Make_ChemfuelFromFecalSludge";
         private const float RequiredSewage = SewageDisposalUtility.ExtractionBatchSize;
+        private static readonly HashSet<RecipeDef> sewageSubstitutionRecipes = new HashSet<RecipeDef>();
         private static bool configured;
         private static bool structureSupported;
         private static bool harmonyTargetsSupported = true;
@@ -89,12 +89,13 @@ namespace DBHPipedWaste
                 }
 
                 CompProperties_PipedSewageHandler properties = pipedRefineryDef.GetCompProperties<CompProperties_PipedSewageHandler>();
-                properties.capacity = RequiredSewage * 3f;
-                if (PipedRecipe.recipeUsers != null)
+                List<RecipeDef> refineryRecipes = BuildRefineryRecipeList();
+                foreach (RecipeDef recipe in refineryRecipes)
                 {
-                    PipedRecipe.recipeUsers.RemoveAll(user => user == pipedRefineryDef);
+                    recipe.recipeUsers?.RemoveAll(user => user == pipedRefineryDef);
                 }
-                pipedRefineryDef.recipes = BuildRefineryRecipeList();
+                pipedRefineryDef.recipes = refineryRecipes;
+                properties.capacity = Math.Max(properties.capacity, MaximumConfiguredSewageRequirement());
                 structureSupported = true;
                 disabledReason = null;
                 Log.Message("[DBH Piped Waste] Dedicated piped refinery recipe enabled: " + RequiredSewage +
@@ -111,19 +112,153 @@ namespace DBHPipedWaste
         private static List<RecipeDef> BuildRefineryRecipeList()
         {
             List<RecipeDef> recipes = new List<RecipeDef>();
-            foreach (string defName in StandardRefineryRecipeDefNames)
+            sewageSubstitutionRecipes.Clear();
+
+            ThingDef vanillaRefinery = DefDatabase<ThingDef>.GetNamedSilentFail(VanillaBiofuelRefineryDefName);
+            List<RecipeDef> inheritedRecipes = new List<RecipeDef>();
+            AddRecipesAvailableOn(inheritedRecipes, vanillaRefinery);
+            foreach (RecipeDef recipe in inheritedRecipes)
             {
-                RecipeDef recipe = DefDatabase<RecipeDef>.GetNamedSilentFail(defName);
-                if (recipe != null && !recipes.Contains(recipe))
+                AddRecipe(recipes, recipe);
+            }
+            Log.Message("[DBH Piped Waste] Automatically inherited " + inheritedRecipes.Count +
+                " BiofuelRefinery recipe(s): " + FormatRecipeNames(inheritedRecipes) + ".");
+
+            ThingDef fecalSludge = DefDatabase<ThingDef>.GetNamedSilentFail(FecalSludgeDefName);
+            ThingDef burnPit = DefDatabase<ThingDef>.GetNamedSilentFail(BurnPitDefName);
+            if (fecalSludge != null)
+            {
+                List<RecipeDef> convertible = DefDatabase<RecipeDef>.AllDefsListForReading
+                    .Where(recipe => recipe.defName != DBHFecalChemfuelRecipeDefName)
+                    .Where(recipe => IsRecipeAvailableOn(recipe, vanillaRefinery) || IsRecipeAvailableOn(recipe, burnPit))
+                    .Where(recipe => CanSafelySubstituteSewage(recipe, fecalSludge))
+                    .OrderBy(recipe => recipe.defName)
+                    .ToList();
+
+                foreach (RecipeDef recipe in convertible)
                 {
-                    recipes.Add(recipe);
+                    AddRecipe(recipes, recipe);
+                    sewageSubstitutionRecipes.Add(recipe);
+                }
+
+                Log.Message("[DBH Piped Waste] Automatic sewage recipe discovery mounted " + convertible.Count +
+                    " compatible recipe(s): " + FormatRecipeNames(convertible) + ".");
+            }
+
+            AddRecipe(recipes, PipedRecipe);
+            return recipes;
+        }
+
+        private static void AddRecipesAvailableOn(List<RecipeDef> destination, ThingDef workTable)
+        {
+            if (workTable == null)
+            {
+                return;
+            }
+
+            if (workTable.recipes != null)
+            {
+                foreach (RecipeDef recipe in workTable.recipes)
+                {
+                    AddRecipe(destination, recipe);
                 }
             }
-            if (PipedRecipe != null && !recipes.Contains(PipedRecipe))
+
+            foreach (RecipeDef recipe in DefDatabase<RecipeDef>.AllDefsListForReading)
             {
-                recipes.Add(PipedRecipe);
+                if (recipe.recipeUsers != null && recipe.recipeUsers.Contains(workTable))
+                {
+                    AddRecipe(destination, recipe);
+                }
             }
-            return recipes;
+        }
+
+        private static bool IsRecipeAvailableOn(RecipeDef recipe, ThingDef workTable)
+        {
+            return recipe != null && workTable != null &&
+                ((workTable.recipes != null && workTable.recipes.Contains(recipe)) ||
+                 (recipe.recipeUsers != null && recipe.recipeUsers.Contains(workTable)));
+        }
+
+        private static bool CanSafelySubstituteSewage(RecipeDef recipe, ThingDef fecalSludge)
+        {
+            if (recipe == null || recipe.workerClass != typeof(RecipeWorker) ||
+                recipe.UsesUnfinishedThing || !recipe.specialProducts.NullOrEmpty() ||
+                recipe.products.NullOrEmpty() || recipe.products.Any(product => product.thingDef?.MadeFromStuff == true) ||
+                recipe.ingredients.NullOrEmpty() || recipe.fixedIngredientFilter == null ||
+                recipe.ingredients.Any(ingredient => ingredient?.filter == null ||
+                    !ingredient.filter.Allows(fecalSludge) ||
+                    (!ingredient.IsFixedIngredient && !recipe.fixedIngredientFilter.Allows(fecalSludge))))
+            {
+                return false;
+            }
+
+            return TryCalculateSewageRequirement(recipe, null, fecalSludge, out _);
+        }
+
+        private static void AddRecipe(List<RecipeDef> destination, RecipeDef recipe)
+        {
+            if (recipe != null && !destination.Contains(recipe))
+            {
+                destination.Add(recipe);
+            }
+        }
+
+        private static string FormatRecipeNames(IEnumerable<RecipeDef> recipes)
+        {
+            string[] names = recipes.Select(recipe => recipe.defName).ToArray();
+            return names.Length > 0 ? string.Join(", ", names) : "<none>";
+        }
+
+        private static float MaximumConfiguredSewageRequirement()
+        {
+            float maximum = RequiredSewage;
+            ThingDef fecalSludge = DefDatabase<ThingDef>.GetNamedSilentFail(FecalSludgeDefName);
+            foreach (RecipeDef recipe in sewageSubstitutionRecipes)
+            {
+                if (TryCalculateSewageRequirement(recipe, null, fecalSludge, out float amount))
+                {
+                    maximum = Math.Max(maximum, amount);
+                }
+            }
+            return maximum;
+        }
+
+        private static bool TryCalculateSewageRequirement(
+            RecipeDef recipe,
+            Bill bill,
+            ThingDef fecalSludge,
+            out float requiredSewage)
+        {
+            requiredSewage = 0f;
+            if (recipe?.ingredients == null || fecalSludge == null)
+            {
+                return false;
+            }
+
+            float valuePerUnit = recipe.IngredientValueGetter.ValuePerUnitOf(fecalSludge);
+            if (float.IsNaN(valuePerUnit) || float.IsInfinity(valuePerUnit) || valuePerUnit <= 0f)
+            {
+                return false;
+            }
+
+            foreach (IngredientCount ingredient in recipe.ingredients)
+            {
+                if (ingredient == null)
+                {
+                    return false;
+                }
+
+                int amount = ingredient.CountRequiredOfFor(fecalSludge, recipe, bill);
+                if (amount <= 0)
+                {
+                    return false;
+                }
+                requiredSewage += amount;
+            }
+
+            requiredSewage = SewageDisposalUtility.SanitizeAmount(requiredSewage);
+            return requiredSewage > SewageNetworkUtility.AutomaticSupplyEpsilon;
         }
 
         public static PipedRefineryValidationResult ValidatePipedRefineryStructure()
@@ -219,42 +354,36 @@ namespace DBHPipedWaste
                 && billGiver.TryGetComp<CompPipedRefinerySewage>() != null;
         }
 
-        public static Bill FindDedicatedPipedBill(Thing billGiver)
+        public static bool IsSewageBackedRecipe(RecipeDef recipe)
         {
-            Building_WorkTable workTable = billGiver as Building_WorkTable;
-            if (workTable?.BillStack == null)
-            {
-                return null;
-            }
-
-            for (int i = 0; i < workTable.BillStack.Count; i++)
-            {
-                Bill bill = workTable.BillStack[i];
-                if (bill != null && IsDedicatedPipedRecipe(bill.recipe))
-                {
-                    return bill;
-                }
-            }
-            return null;
+            return IsDedicatedPipedRecipe(recipe) || sewageSubstitutionRecipes.Contains(recipe);
         }
 
-        public static Bill FindPipedBill(Thing billGiver)
+        public static bool IsSewageBackedBill(Bill bill, Thing billGiver, out float requiredSewage)
         {
-            Building_WorkTable workTable = billGiver as Building_WorkTable;
-            if (!PipedRecipeSupported || workTable?.BillStack == null)
+            requiredSewage = 0f;
+            if (!PipedRecipeSupported || bill == null || billGiver == null ||
+                billGiver.TryGetComp<CompPipedRefinerySewage>() == null ||
+                !IsSewageBackedRecipe(bill.recipe))
             {
-                return null;
+                return false;
             }
 
-            for (int i = 0; i < workTable.BillStack.Count; i++)
+            if (IsDedicatedPipedRecipe(bill.recipe))
             {
-                Bill bill = workTable.BillStack[i];
-                if (bill != null && IsPipedBill(bill.recipe, billGiver))
-                {
-                    return bill;
-                }
+                requiredSewage = RequiredSewage;
+                return true;
             }
-            return null;
+
+            ThingDef fecalSludge = DefDatabase<ThingDef>.GetNamedSilentFail(FecalSludgeDefName);
+            return TryCalculateSewageRequirement(bill.recipe, bill, fecalSludge, out requiredSewage);
+        }
+
+        public static bool IsSewageBackedJob(Job job, out float requiredSewage)
+        {
+            requiredSewage = 0f;
+            return job != null && job.bill != null && job.RecipeDef == job.bill.recipe &&
+                IsSewageBackedBill(job.bill, job.targetA.Thing, out requiredSewage);
         }
 
         public static CompPipedRefinerySewage HandlerFor(Job job)

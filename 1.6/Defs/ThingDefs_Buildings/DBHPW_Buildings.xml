@@ -63,7 +63,7 @@
   <ThingDef ParentName="BenchBase">
     <defName>DBHPW_PipedBiofuelRefinery</defName>
     <label>piped biofuel refinery</label>
-    <description>A biofuel refinery with a sewage intake. It supports the standard wood and organics recipes, the Dubs Bad Hygiene fecal-sludge recipe, and a dedicated recipe that consumes buffered sewage directly.</description>
+    <description>A biofuel refinery with a sewage intake. It inherits recipes available on the standard refinery and can automatically substitute buffered sewage for compatible fecal-sludge recipes.</description>
     <thingClass>Building_WorkTable</thingClass>
     <minifiedDef />
     <graphicData>

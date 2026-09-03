@@ -1,5 +1,6 @@
 param(
-    [string]$Version = "0.1.5"
+    [string]$Version = "0.1.6",
+    [string]$WorkshopPublishedFileId = "3791002569"
 )
 
 $ErrorActionPreference = "Stop"
@@ -52,29 +53,25 @@ $githubRoot = Resolve-ProjectPath "GitHub"
 $runtimeStage = Resolve-ProjectPath "_package_staging\DBHPipedWaste"
 $sourceStage = Resolve-ProjectPath "_package_staging\DBH-Piped-Waste"
 $githubSource = Resolve-ProjectPath "GitHub\DBH-Piped-Waste"
-$githubMetadataPath = Join-Path $githubSource ".git"
-$githubMetadataBackup = Resolve-ProjectPath "GitHub\.DBH-Piped-Waste.git"
 $existingPublishedFileIdPath = Resolve-ProjectPath "Release\WorkshopUpload\DBHPipedWaste\About\PublishedFileId.txt"
-$publishedFileId = $null
+$publishedFileId = $WorkshopPublishedFileId.Trim()
+if ($publishedFileId -notmatch '^\d+$') {
+    throw "Invalid configured Workshop PublishedFileId: $publishedFileId"
+}
 if (Test-Path -LiteralPath $existingPublishedFileIdPath -PathType Leaf) {
     $candidatePublishedFileId = (Get-Content -LiteralPath $existingPublishedFileIdPath -Raw).Trim()
     if ($candidatePublishedFileId -notmatch '^\d+$') {
         throw "Invalid existing Workshop PublishedFileId: $candidatePublishedFileId"
     }
-    $publishedFileId = $candidatePublishedFileId
+    if ($candidatePublishedFileId -ne $publishedFileId) {
+        throw "Existing Workshop PublishedFileId $candidatePublishedFileId does not match configured ID $publishedFileId."
+    }
 }
 
 Remove-GeneratedPath "Release\DBHPipedWaste"
 Remove-GeneratedPath "Release\WorkshopUpload\DBHPipedWaste"
 Remove-GeneratedPath "Release\DBHPipedWaste-$Version.zip"
 Remove-GeneratedPath "GitHub\DBH-Piped-Waste-Source-$Version.zip"
-if ((Test-Path -LiteralPath $githubMetadataPath) -and (Test-Path -LiteralPath $githubMetadataBackup)) {
-    throw "Both Git metadata locations exist; refusing to overwrite either one."
-}
-if (Test-Path -LiteralPath $githubMetadataPath) {
-    Move-Item -LiteralPath $githubMetadataPath -Destination $githubMetadataBackup
-}
-Remove-GeneratedPath "GitHub\DBH-Piped-Waste"
 Remove-GeneratedPath "_package_staging"
 
 New-Item -ItemType Directory -Path $runtimeStage,$sourceStage | Out-Null
@@ -122,16 +119,11 @@ Get-ChildItem -LiteralPath $runtimeStage -Recurse -Filter "*.xml" | ForEach-Obje
 
 $releaseMod = Resolve-ProjectPath "Release\DBHPipedWaste"
 $workshopMod = Resolve-ProjectPath "Release\WorkshopUpload\DBHPipedWaste"
-New-Item -ItemType Directory -Path (Split-Path -Parent $releaseMod),(Split-Path -Parent $workshopMod),$githubRoot -Force | Out-Null
+New-Item -ItemType Directory -Path (Split-Path -Parent $releaseMod),(Split-Path -Parent $workshopMod),$githubRoot,$githubSource -Force | Out-Null
 Copy-Item -LiteralPath $runtimeStage -Destination $releaseMod -Recurse -Force
 Copy-Item -LiteralPath $runtimeStage -Destination $workshopMod -Recurse -Force
-Copy-Item -LiteralPath $sourceStage -Destination $githubSource -Recurse -Force
-if (Test-Path -LiteralPath $githubMetadataBackup) {
-    Move-Item -LiteralPath $githubMetadataBackup -Destination (Join-Path $githubSource ".git")
-}
-if ($publishedFileId) {
-    Set-Content -LiteralPath (Join-Path $workshopMod "About\PublishedFileId.txt") -Value $publishedFileId -Encoding Ascii -NoNewline
-}
+Get-ChildItem -LiteralPath $sourceStage -Force | Copy-Item -Destination $githubSource -Recurse -Force
+Set-Content -LiteralPath (Join-Path $workshopMod "About\PublishedFileId.txt") -Value $publishedFileId -Encoding Ascii -NoNewline
 
 $releaseZip = Resolve-ProjectPath "Release\DBHPipedWaste-$Version.zip"
 $sourceZip = Resolve-ProjectPath "GitHub\DBH-Piped-Waste-Source-$Version.zip"
